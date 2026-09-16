@@ -1,0 +1,33 @@
+Funcionó:
+
+El archivo se llama main.
+Hay un archivo .toml que indica la librería pygame.
+Se compila con:
+source venv/bin/activate
+pygodide build .
+cp index_web.html build/index.html
+zip -r domino-web.zip build/
+
+pygodide serve . (para servir localmente)
+
+---
+
+El main usa asyncio
+
+AL final:
+
+async def main():
+    juego = JuegoPygame()
+    await juego.ejecutar()
+
+if __name__ == "__main__":
+    juego = JuegoPygame()
+    asyncio.run(juego.ejecutar())
+
+La def principal es una clase async, tiene esto después del flip:
+await asyncio.sleep(1 / 60)  # <--- CEDER CONTROL AL NAVEGADOR
+
+
+OJO, debe estar así:
+#self.pantalla = pygame.display.set_mode((self.ancho_pantalla, self.alto_pantalla), pygame.FULLSCREEN)
+self.pantalla = pygame.display.set_mode((self.ancho_pantalla, self.alto_pantalla))

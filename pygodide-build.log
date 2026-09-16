@@ -1,0 +1,38 @@
+Pygodide build log
+Started: 2026-08-23T21:25:50.285952+00:00
+Pygodide version: 0.1.0
+Python: 3.14.4 (main, Jun 18 2026, 14:25:02) [GCC 15.2.0]
+Platform: Linux-7.0.0-29-generic-x86_64-desconocido-with-glibc2.43
+Working directory: /home/eml/Documentos/pypy/domino4
+Source directory: /home/eml/Documentos/pypy/domino4/pygame_app_web.py
+Output directory: /home/eml/Documentos/pypy/domino4
+Serve after build: False
+CLI app override: (none)
+CLI dependencies: (none)
+CLI canvas-width: (none)
+CLI canvas-height: (none)
+Auto-async: True
+
+Build output:
+
+Result: failure
+Finished: 2026-08-23T21:25:50.289463+00:00
+Error: ValueError: /home/eml/Documentos/pypy/domino4/pygame_app_web.py is not a directory
+
+Traceback:
+Traceback (most recent call last):
+  File "/home/eml/Documentos/pypy/domino4/venv/lib/python3.14/site-packages/pygodide/cli/runners.py", line 76, in run_build_command
+    output_dir = build_app(
+        source_dir,
+    ...<7 lines>...
+        log=log_tee(build_log_path, typer.echo),
+    )
+  File "/home/eml/Documentos/pypy/domino4/venv/lib/python3.14/site-packages/pygodide/builder/pipeline.py", line 50, in build_app
+    build_plan = build_plan_for_source(
+        source_dir,
+    ...<4 lines>...
+        canvas_fill=canvas_fill,
+    )
+  File "/home/eml/Documentos/pypy/domino4/venv/lib/python3.14/site-packages/pygodide/builder/plan.py", line 125, in build_plan_for_source
+    raise ValueError(f"{resolved_source_dir} is not a directory")
+ValueError: /home/eml/Documentos/pypy/domino4/pygame_app_web.py is not a directory

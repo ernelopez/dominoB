@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+build/
+domino-web.zip
+.DS_Store
