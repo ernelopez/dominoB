@@ -72,6 +72,8 @@ class JuegoPygame:
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
+        pygame.mixer.music.load("sonidos/loop.mp3")
+        pygame.mixer.music.play(-1)
         
         # Nombres de jugadores
         self.nombre_jugador1 = "Jugador 1"
@@ -196,26 +198,20 @@ class JuegoPygame:
         # ============================================
         # LOGOS
         # ============================================
-        escala_eef = 0.2 * self.escala   # Ajustá este valor
-        escala_baa = 0.2 * self.escala   # Ajustá este valor
+        escala_baa = 0.5 * self.escala   # Ajustá este valor
 
-        ancho_eef = int(self.img_eef.get_width() * escala_eef)
-        alto_eef = int(self.img_eef.get_height() * escala_eef)
         ancho_baa = int(self.img_baa.get_width() * escala_baa)
         alto_baa = int(self.img_baa.get_height() * escala_baa)
 
-        #img_eef = pygame.transform.scale(self.img_eef, (ancho_eef, alto_eef))
-        #img_baa = pygame.transform.scale(self.img_baa, (ancho_baa, alto_baa))
-        img_eef = pygame.transform.smoothscale(self.img_eef, (ancho_eef, alto_eef))
         img_baa = pygame.transform.smoothscale(self.img_baa, (ancho_baa, alto_baa))
         
         separacion = int(10 * self.escala)
         centro_x = self.ancho_pantalla // 2
 
         # Posición vertical
-        y_imagenes = self.alto_pantalla - int(220 * self.escala)
+        #y_imagenes = self.alto_pantalla - int(220 * self.escala)
+        y_imagenes = self.alto_pantalla - int(400 * self.escala)
 
-        self.pantalla.blit(img_eef, (centro_x - ancho_eef // 2, y_imagenes))
         self.pantalla.blit(img_baa, (centro_x - ancho_baa // 2, y_imagenes + alto_baa + separacion))        
     
     def recalcular_tamanos(self):
@@ -262,8 +258,7 @@ class JuegoPygame:
             self.img_frente_v_original = pygame.image.load(os.path.join(assets_dir, "ficha2_v.png"))
             self.img_dorso_original = pygame.image.load(os.path.join(assets_dir, "dorso12.png"))
             self.img_dorso_v_original = pygame.image.load(os.path.join(assets_dir, "dorso12_v.png"))
-            self.img_eef = pygame.image.load(os.path.join(assets_dir, "EEF.png"))
-            self.img_baa = pygame.image.load(os.path.join(assets_dir, "BAA.png"))
+            self.img_baa = pygame.image.load(os.path.join(assets_dir, "BAA2.png"))
 
             # Escalar al tamaño normal para la mano y tablero
             self.img_frente = pygame.transform.smoothscale(self.img_frente_original, (self.largo_ficha, self.ancho_ficha))
@@ -308,7 +303,6 @@ class JuegoPygame:
             self.sonido_clic = None
             self.sonido_coin = None
             self.sonido_error = None
-            self.img_eef = None
             self.img_baa = None
 
     def calcular_offset_tablero(self):
@@ -367,7 +361,9 @@ class JuegoPygame:
         )
         self.botones.append(self.boton_pasar)
 
-        x_reiniciar = int(30 * self.escala)
+        #x_reiniciar = int(30 * self.escala)
+        #y_reiniciar = self.alto_pantalla - int(75 * self.escala)
+        x_reiniciar = self.ancho_pantalla - int(150 * self.escala) - int(30 * self.escala)
         y_reiniciar = self.alto_pantalla - int(75 * self.escala)
         ancho_reiniciar = int(150 * self.escala)
         alto_reiniciar = int(50 * self.escala)
@@ -383,7 +379,7 @@ class JuegoPygame:
         self.botones.append(self.boton_reiniciar)
 
         x_ayuda = self.ancho_pantalla - int(150 * self.escala) - int(30 * self.escala)
-        y_ayuda = self.alto_pantalla - int(75 * self.escala)
+        y_ayuda = self.alto_pantalla - int(120 * self.escala)
         ancho_ayuda = int(150 * self.escala)
         alto_ayuda = int(50 * self.escala)
         
@@ -397,9 +393,9 @@ class JuegoPygame:
         )
         self.botones.append(self.boton_ayuda)
 
-        # Botón LUPA (arriba del botón de ayuda)
+        # Botón LUPA
         x_lupa = self.ancho_pantalla - int(150 * self.escala) - int(30 * self.escala)
-        y_lupa = self.alto_pantalla - int(125 * self.escala)
+        y_lupa = self.alto_pantalla - int(165 * self.escala)
         ancho_lupa = int(150 * self.escala)
         alto_lupa = int(50 * self.escala)
 
@@ -1137,7 +1133,7 @@ class JuegoPygame:
             self.pantalla.blit(L, (self.ancho_pantalla // 2 - L.get_width() // 2, y_texto))
             y_texto += int(28 * self.escala)
 
-        cerrar = self.fuente.render("Presioná cualquier tecla para cerrar", True, (150, 150, 150))
+        cerrar = self.fuente.render("Presioná la tecla enter para cerrar", True, (150, 150, 150))
         self.pantalla.blit(cerrar, (self.ancho_pantalla // 2 - cerrar.get_width() // 2, y_cartel + alto_cartel - int(35 * self.escala)))
 
     async def ejecutar(self):
@@ -1217,6 +1213,7 @@ class JuegoPygame:
         
         if evento.key == pygame.K_RETURN or evento.key == pygame.K_KP_ENTER:
             if len(self.nombre_jugador1.strip()) > 0 and len(self.nombre_jugador2.strip()) > 0:
+                pygame.mixer.music.stop()
                 self.nombres_ingresados = True
                 self.crear_partida_con_nombres()
         elif evento.key == pygame.K_BACKSPACE:
@@ -1255,6 +1252,16 @@ class JuegoPygame:
             nombre = self.nombre_jugador2
             color = COLOR_JUGADOR2
         self.mostrar_mensaje(f"Comienza {nombre}!", "info", color)
+
+    def dibujar_logo_baa(self):
+        escala_baa = 0.25 * self.escala
+        ancho_baa = int(self.img_baa.get_width() * escala_baa)
+        alto_baa = int(self.img_baa.get_height() * escala_baa)
+        img_baa = pygame.transform.smoothscale(self.img_baa,(ancho_baa, alto_baa))
+        margenx, margeny = int(20 * self.escala) , int(30 * self.escala)
+        x = margenx
+        y = self.alto_pantalla - alto_baa - margeny
+        self.pantalla.blit(img_baa, (x, y))
 
     async def bucle_juego(self):
         """Bucle principal del juego. Retorna False si se cierra."""
@@ -1344,7 +1351,7 @@ class JuegoPygame:
                     self.ejecutar_pasar()
                 elif boton == self.boton_reiniciar:
                     self.mostrar_confirmacion_reinicio = True
-                    self.mensaje_confirmacion = "¿Reiniciar partida? (S/N)"
+                    self.mensaje_confirmacion = "¿Reiniciar partida?"
                 elif boton == self.boton_ayuda:
                     self.mostrar_ayuda = not self.mostrar_ayuda
                 elif boton == self.boton_lupa:
@@ -1547,7 +1554,8 @@ class JuegoPygame:
         self.dibujar_mensajes()
         self.dibujar_pozo()
         self.dibujar_tablero()
-        
+        self.dibujar_logo_baa()
+
         # Etiquetas de jugadores
         self.dibujar_etiquetas_jugadores()
         
